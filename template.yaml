@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Timeout: 60
+    MemorySize: 256
+    Runtime: python3.8
+
+Resources:
+  PowerDialerLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns: 
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaKinesisExecutionRole
+  pythonfunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: appOne-python2function
+      CodeUri: appOne-python2function
+      Handler: lambda_function.lambda_handler
+      Role: !GetAtt PowerDialerLambdaRole.Arn
+      Runtime: python3.9
+      Timeout: 3
+      MemorySize: 128
+      Environment:
+        Variables:
+          AirQuality: Poor
+          Pollen: High
+      Layers:
+        - arn:aws:lambda:us-east-2:157417159150:layer:AWSCodeGuruProfilerPythonAgentLambdaLayer:3
+        - arn:aws:lambda:us-east-2:580247275435:layer:LambdaInsightsExtension:14
