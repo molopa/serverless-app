@@ -4,9 +4,10 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      python: 3.8
+      python: 3.9
     commands:
       # Install packages or any pre-reqs in this phase.
+      - chmod +x install-deps.sh
       - ./install-deps.sh
   
   build:
